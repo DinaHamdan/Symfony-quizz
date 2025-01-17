@@ -2,9 +2,9 @@
 // src/Entity/Question.php
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 class Question
@@ -14,13 +14,10 @@ class Question
     #[ORM\Column(type: "integer")]
     private $id;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: "string", length: 255)]
     private $text;
 
-    #[ORM\Column(type: "string")]
-    private $correctAnswer;
-
-    #[ORM\OneToMany(mappedBy: "question", targetEntity: Answer::class, cascade: ["persist", "remove"])]
+    #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question', cascade: ['persist', 'remove'])]
     private $answers;
 
     public function __construct()
@@ -41,22 +38,12 @@ class Question
     public function setText(string $text): self
     {
         $this->text = $text;
-        return $this;
-    }
 
-    public function getCorrectAnswer(): ?string
-    {
-        return $this->correctAnswer;
-    }
-
-    public function setCorrectAnswer(string $correctAnswer): self
-    {
-        $this->correctAnswer = $correctAnswer;
         return $this;
     }
 
     /**
-     * @return Collection|Answer[]
+     * @return Collection<int, Answer>
      */
     public function getAnswers(): Collection
     {

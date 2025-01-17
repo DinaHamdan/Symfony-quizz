@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Add New Quiz Question</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container mt-5">
+			<h1 class="text-center">Add New Quiz Question</h1>
+
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			{% for message in app.flashes('error') %}
+				<div class="alert alert-danger">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			<form method="post" action="{{ path('admin_quiz_new') }}">
+				<div class="mb-3">
+					<label for="question" class="form-label">Question Text</label>
+					<input type="text" id="question" name="question" class="form-control" required>
+				</div>
+				<div id="answers-container">
+					<div class="mb-3 answer-group">
+						<label for="answer_1" class="form-label">Answer 1</label>
+						<input type="text" id="answer_1" name="answers[0][text]" class="form-control" required>
+						<div class="form-check">
+
+							<input type="checkbox" id="correct_1" name="answers[0][correct]" class="form-check-input">
+							<label for="correct_1" class="form-check-label">Correct Answer</label>
+						</div>
+					</div>
+				</div>
+				<button type="button" id="add-answer" class="btn btn-secondary mb-3">Add Another Answer</button>
+				<div class="text-center">
+					<button type="submit" class="btn btn-primary">Save Question</button>
+				</div>
+			</form>
+		</div>
+
+		<script>
+			let answerIndex = 1;
+document.getElementById('add-answer').addEventListener('click', () => {
+answerIndex++;
+const container = document.getElementById('answers-container');
+const newAnswer = document.createElement('div');
+newAnswer.classList.add('mb-3', 'answer-group');
+newAnswer.innerHTML = `
+                <label for="answer_${answerIndex}" class="form-label">Answer ${answerIndex}</label>
+                <input type="text" id="answer_${answerIndex}" name="answers[${answerIndex}][text]" class="form-control" required>
+                <div class="form-check">
+                    <input type="checkbox" id="correct_${answerIndex}" name="answers[${answerIndex}][correct]" class="form-check-input">
+                    <label for="correct_${answerIndex}" class="form-check-label">Correct Answer</label>
+                </div>
+            `;
+container.appendChild(newAnswer);
+});
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

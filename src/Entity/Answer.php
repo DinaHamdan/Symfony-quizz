@@ -1,43 +1,30 @@
 <?php
-
+// src/Entity/Answer.php
 namespace App\Entity;
 
-use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AnswerRepository::class)]
+#[ORM\Entity]
 class Answer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: "integer")]
+    private $id;
 
-    #[ORM\ManyToOne]
+    #[ORM\Column(type: "string", length: 255)]
+    private $text;
+
+    #[ORM\Column(type: "boolean", options: ["default" => false])]
+    private $correctAnswer = false;
+
+    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Question $question = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $text = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $isCorrect = null;
+    private $question;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getQuestion(): ?Question
-    {
-        return $this->question;
-    }
-
-    public function setQuestion(?Question $question): static
-    {
-        $this->question = $question;
-
-        return $this;
     }
 
     public function getText(): ?string
@@ -45,21 +32,33 @@ class Answer
         return $this->text;
     }
 
-    public function setText(?string $text): static
+    public function setText(string $text): self
     {
         $this->text = $text;
 
         return $this;
     }
 
-    public function isCorrect(): ?bool
+    public function getCorrectAnswer(): ?bool
     {
-        return $this->isCorrect;
+        return $this->correctAnswer;
     }
 
-    public function setCorrect(?bool $isCorrect): static
+    public function setCorrectAnswer(bool $correctAnswer): self
     {
-        $this->isCorrect = $isCorrect;
+        $this->correctAnswer = $correctAnswer;
+
+        return $this;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): self
+    {
+        $this->question = $question;
 
         return $this;
     }
